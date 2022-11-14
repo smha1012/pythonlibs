@@ -3,7 +3,7 @@
 # https://www.apache.org/licenses/LICENSE-2.0.html
 
 # ReadMe
-README = 'Common Library for PyTorch\nAuthor: M. Akaishi'
+README = 'Common Library for PyTorch\nAuthor: M. Akaishi\nTranslator: Seungmin Ha'
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,7 +39,7 @@ def eval_loss(loader, device, net, criterion):
   
 
 # 학습용 함수
-def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device, history):
+def fit(net, optimizer, criterion, num_epochs, train_loader, valid_loader, device, history):
 
     base_epochs = len(history)
   
@@ -88,7 +88,7 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device
         net.eval()
         count = 0
 
-        for inputs, labels in test_loader:
+        for inputs, labels in valid_loader:
             count += len(labels)
 
             inputs = inputs.to(device)
@@ -111,7 +111,7 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device
             avg_val_loss = val_loss / count
             avg_val_acc = val_acc / count
     
-        print (f'Epoch [{(epoch+1)}/{num_epochs+base_epochs}], loss: {avg_train_loss:.5f} acc: {avg_train_acc:.5f} val_loss: {avg_val_loss:.5f}, val_acc: {avg_val_acc:.5f}')
+        print (f'Epoch [{(epoch+1)}/{num_epochs+base_epochs}], loss: {avg_train_loss:.4f} acc: {avg_train_acc:.4f} val_loss: {avg_val_loss:.4f}, val_acc: {avg_val_acc:.4f}')
         item = np.array([epoch+1, avg_train_loss, avg_train_acc, avg_val_loss, avg_val_acc])
         history = np.vstack((history, item))
     return history
@@ -121,8 +121,8 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, test_loader, device
 # 학습 로그 해석
 def evaluate_history(history):
   # 손실과 정확도 확인
-  print(f'초기상태 : 손실 : {history[0,3]:.5f}  정확도 : {history[0,4]:.5f}')
-  print(f'최종상태 : 손실 : {history[-1,3]:.5f} 정확도 : {history[-1,4]:.5f}' )
+  print(f'초기상태 : 손실 : {history[0,3]:.5f}  정확도 : {history[0,4]:.4f}')
+  print(f'최종상태 : 손실 : {history[-1,3]:.5f} 정확도 : {history[-1,4]:.4f}' )
 
   num_epochs = len(history)
   if num_epochs < 10:
@@ -132,7 +132,7 @@ def evaluate_history(history):
 
   # 학습 곡선 출력(손실)
   plt.figure(figsize=(9,8))
-  plt.plot(history[:,0], history[:,1], 'b', label='훈련')
+  plt.plot(history[:,0], history[:,1], 'b', label='학습')
   plt.plot(history[:,0], history[:,3], 'k', label='검증')
   plt.xticks(np.arange(0,num_epochs+1, unit))
   plt.xlabel('반복 횟수')
@@ -143,7 +143,7 @@ def evaluate_history(history):
 
   # 학습 곡선 출력(정확도)
   plt.figure(figsize=(9,8))
-  plt.plot(history[:,0], history[:,2], 'b', label='훈련')
+  plt.plot(history[:,0], history[:,2], 'b', label='학습')
   plt.plot(history[:,0], history[:,4], 'k', label='검증')
   plt.xticks(np.arange(0,num_epochs+1,unit))
   plt.xlabel('반복 횟수')
