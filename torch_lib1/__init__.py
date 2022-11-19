@@ -112,10 +112,21 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, valid_loader, devic
             avg_val_acc = val_acc / count
     
         print (f'Epoch [{(epoch+1)}/{num_epochs+base_epochs}], loss: {avg_train_loss:.4f} acc: {avg_train_acc:.4f} val_loss: {avg_val_loss:.4f}, val_acc: {avg_val_acc:.4f}')
+
         item = np.array([epoch+1, avg_train_loss, avg_train_acc, avg_val_loss, avg_val_acc])
         history = np.vstack((history, item))
-    return history
 
+        if avg_val_acc > best_acc:
+            print('Saving..')
+            state = {
+                'net': net.state_dict(),
+                'acc': avg_val_acc,
+                'epoch': epoch,
+            }
+            torch.save(state, './model.pt')
+        best_acc = avg_val_acc
+
+    return history
 
 
 # 학습 로그 해석
