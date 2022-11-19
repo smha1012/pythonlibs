@@ -117,14 +117,15 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, valid_loader, devic
         item = np.array([epoch+1, avg_train_loss, avg_train_acc, avg_val_loss, avg_val_acc])
         history = np.vstack((history, item))
 
-        if avg_val_acc > avg_val_acc:
-            print('Saving..')
-            state = {
-                'net': net.state_dict(),
-                'acc': avg_val_acc,
-                'epoch': epoch,
+        #if avg_val_acc > best_acc:
+
+        print('Saving..')
+        state = {
+            'net': net.state_dict(),
+            'acc': avg_val_acc,
+            'epoch': epoch,
             }
-            torch.save(state, './model.pt')
+        torch.save(state, './model.pt')
 
     return history
 
