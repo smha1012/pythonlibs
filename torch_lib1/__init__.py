@@ -87,6 +87,7 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, valid_loader, devic
         # 예측 페이즈
         net.eval()
         count = 0
+        best_acc = 0
 
         for inputs, labels in valid_loader:
             count += len(labels)
@@ -116,7 +117,7 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, valid_loader, devic
         item = np.array([epoch+1, avg_train_loss, avg_train_acc, avg_val_loss, avg_val_acc])
         history = np.vstack((history, item))
 
-        if avg_val_acc > best_acc:
+        if avg_val_acc > avg_val_acc:
             print('Saving..')
             state = {
                 'net': net.state_dict(),
@@ -124,7 +125,6 @@ def fit(net, optimizer, criterion, num_epochs, train_loader, valid_loader, devic
                 'epoch': epoch,
             }
             torch.save(state, './model.pt')
-        best_acc = avg_val_acc
 
     return history
 
